@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>My First Code</title>
+        <style>
+            body {
+                  font-family: Arial, sans-serif;
+                        background: #0d1117;
+                              color: #e6edf3;
+                                    display: flex;
+                                          flex-direction: column;
+                                                align-items: center;
+                                                      justify-content: center;
+                                                            height: 100vh;
+                                                                  margin: 0;
+                                                                        transition: 0.3s;
+                                                                            }
+                                                                                body.light { background: #f5f5f5; color: #111; }
+                                                                                    h1 { font-size: 2.2rem; margin-bottom: 8px; text-align: center; }
+                                                                                        #clock { font-size: 1.4rem; margin-bottom: 20px; color: #58a6ff; }
+                                                                                            button {
+                                                                                                  padding: 10px 22px;
+                                                                                                        border: none;
+                                                                                                              border-radius: 8px;
+                                                                                                                    background: #238636;
+                                                                                                                          color: white;
+                                                                                                                                font-size: 1rem;
+                                                                                                                                      cursor: pointer;
+                                                                                                                                          }
+                                                                                                                                              button:hover { background: #2ea043; }
+                                                                                                                                                </style>
+                                                                                                                                                </head> 
+                                                                                                                                                <body>
+                                                                                                                                                  <h1 id="greeting"></h1>
+                                                                                                                                                    <div id="clock"></div>
+                                                                                                                                                      <button id="themeBtn">Switch Theme 🌗</button>
+
+                                                                                                                                                        <script>
+                                                                                                                                                            // Time ke hisaab se greeting
+                                                                                                                                                                const hour = new Date().getHours();
+                                                                                                                                                                    let msg = "Good Evening";
+                                                                                                                                                                        if (hour < 12) msg = "Good Morning";
+                                                                                                                                                                            else if (hour < 18) msg = "Good Afternoon";
+                                                                                                                                                                                document.getElementById("greeting").textContent = msg + "! This is my first code 🚀";
+
+                                                                                                                                                                                    // Live clock, har second update hota hai
+                                                                                                                                                                                        function updateClock() {
+                                                                                                                                                                                              document.getElementById("clock").textContent = new Date().toLocaleTimeString();
+                                                                                                                                                                                                  }
+                                                                                                                                                                                                      updateClock();
+                                                                                                                                                                                                          setInterval(updateClock, 1000);
+
+                                                                                                                                                                                                              // Dark / Light theme button
+                                                                                                                                                                                                                  document.getElementById("themeBtn").addEventListener("click", () => {
+                                                                                                                                                                                                                        document.body.classList.toggle("light");
+                                                                                                                                                                                                                            });
+                                                                                                                                                                                                                              </script>
+                                                                                                                                                                                                                              </body>
+                                                                                                                                                                                                                              </html>
