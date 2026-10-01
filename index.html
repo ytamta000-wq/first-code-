@@ -1,61 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>My First Code</title>
-        <style>
-            body {
-                  font-family: Arial, sans-serif;
-                        background: #0d1117;
-                              color: #e6edf3;
-                                    display: flex;
-                                          flex-direction: column;
-                                                align-items: center;
-                                                      justify-content: center;
-                                                            height: 100vh;
-                                                                  margin: 0;
-                                                                        transition: 0.3s;
-                                                                            }
-                                                                                body.light { background: #f5f5f5; color: #111; }
-                                                                                    h1 { font-size: 2.2rem; margin-bottom: 8px; text-align: center; }
-                                                                                        #clock { font-size: 1.4rem; margin-bottom: 20px; color: #58a6ff; }
-                                                                                            button {
-                                                                                                  padding: 10px 22px;
-                                                                                                        border: none;
-                                                                                                              border-radius: 8px;
-                                                                                                                    background: #238636;
-                                                                                                                          color: white;
-                                                                                                                                font-size: 1rem;
-                                                                                                                                      cursor: pointer;
-                                                                                                                                          }
-                                                                                                                                              button:hover { background: #2ea043; }
-                                                                                                                                                </style>
-                                                                                                                                                </head> 
-                                                                                                                                                <body>
-                                                                                                                                                  <h1 id="greeting"></h1>
-                                                                                                                                                    <div id="clock"></div>
-                                                                                                                                                      <button id="themeBtn">Switch Theme 🌗</button>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My First Code</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-                                                                                                                                                        <script>
-                                                                                                                                                            // Time ke hisaab se greeting
-                                                                                                                                                                const hour = new Date().getHours();
-                                                                                                                                                                    let msg = "Good Evening";
-                                                                                                                                                                        if (hour < 12) msg = "Good Morning";
-                                                                                                                                                                            else if (hour < 18) msg = "Good Afternoon";
-                                                                                                                                                                                document.getElementById("greeting").textContent = msg + "! This is my first code 🚀";
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
 
-                                                                                                                                                                                    // Live clock, har second update hota hai
-                                                                                                                                                                                        function updateClock() {
-                                                                                                                                                                                              document.getElementById("clock").textContent = new Date().toLocaleTimeString();
-                                                                                                                                                                                                  }
-                                                                                                                                                                                                      updateClock();
-                                                                                                                                                                                                          setInterval(updateClock, 1000);
+    body {
+      font-family: Arial, sans-serif;
+      background: #000000;
+      color: #e6edf3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s ease;
+      position: relative;
+    }
 
-                                                                                                                                                                                                              // Dark / Light theme button
-                                                                                                                                                                                                                  document.getElementById("themeBtn").addEventListener("click", () => {
-                                                                                                                                                                                                                        document.body.classList.toggle("light");
-                                                                                                                                                                                                                            });
-                                                                                                                                                                                                                              </script>
-                                                                                                                                                                                                                              </body>
-                                                                                                                                                                                                                              </html>
+    body.light {
+      background: #f4f4f4;
+      color: #111;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: radial-gradient(circle at center, #0a0a0a 0%, #050505 30%, #000 100%);
+      z-index: 0;
+    }
+
+    body.light canvas {
+      background: radial-gradient(circle at center, #f5f5f5 0%, #e6e6e6 30%, #f0f0f0 100%);
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      background: rgba(14, 14, 14, 0.38);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 26px 32px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.45);
+    }
+
+    body.light .content {
+      background: rgba(255,255,255,0.38);
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 0 25px rgba(255,255,255,0.4);
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      margin-bottom: 10px;
+      text-align: center;
+      text-shadow: 0 0 20px rgba(110, 180, 255, 0.7);
+    }
+
+    #clock {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      color: #7ec8ff;
+      text-shadow: 0 0 12px rgba(124, 194, 255, 0.8);
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 18px rgba(34, 197, 94, 0.5);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 0 28px rgba(34, 197, 94, 0.8);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="content">
+    <h1 id="greeting"></h1>
+    <div id="clock"></div>
+    <button id="themeBtn">Switch Theme 🌗</button>
+  </div>
+
+  <script>
+    const hour = new Date().getHours();
+    let greeting = 'Good Evening';
+    if (hour < 12) greeting = 'Good Morning';
+    else if (hour < 18) greeting = 'Good Afternoon';
+    document.getElementById('greeting').textContent = greeting + '! This is my first code 🚀';
+
+    function updateClock() {
+      document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      document.body.classList.toggle('light');
+    });
+
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let flashes = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function randomBetween(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function createParticle() {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = randomBetween(1.2, 4.8);
+      const radius = randomBetween(0.4, 1.2);
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        radius,
+        color: ['#ff00ff', '#00eaff', '#00ff99', '#ffd000', '#ff7a18', '#ff4d9d', '#7f5cff'][Math.floor(Math.random() * 7)],
+        glow: randomBetween(8, 18),
+      };
+    }
+
+    function initParticles() {
+      const count = 260;
+      particles = [];
+      for (let i = 0; i < count; i++) {
+        particles.push(createParticle());
+      }
+    }
+
+    function addFlash(x, y, color) {
+      flashes.push({
+        x,
+        y,
+        color,
+        r: 2,
+        life: 1,
+        maxLife: 1,
+      });
+    }
+
+    function updateParticles() {
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > canvas.width) {
+          p.vx *= -1;
+          p.x = Math.max(0, Math.min(canvas.width, p.x));
+        }
+        if (p.y < 0 || p.y > canvas.height) {
+          p.vy *= -1;
+          p.y = Math.max(0, Math.min(canvas.height, p.y));
+        }
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const q = particles[j];
+          const dx = q.x - p.x;
+          const dy = q.y - p.y;
+          const dist = Math.hypot(dx, dy);
+          const minDist = p.radius + q.radius + 3;
+
+          if (dist < minDist) {
+            const midX = (p.x + q.x) / 2;
+            const midY = (p.y + q.y) / 2;
+            const color = Math.random() > 0.5 ? p.color : q.color;
+            addFlash(midX, midY, color);
+
+            p.x = randomBetween(0, canvas.width);
+            p.y = randomBetween(0, canvas.height);
+            q.x = randomBetween(0, canvas.width);
+            q.y = randomBetween(0, canvas.height);
+            p.vx = randomBetween(-4.5, 4.5);
+            p.vy = randomBetween(-4.5, 4.5);
+            q.vx = randomBetween(-4.5, 4.5);
+            q.vy = randomBetween(-4.5, 4.5);
+            break;
+          }
+        }
+      }
+    }
+
+    function drawParticles() {
+      for (const p of particles) {
+        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.glow);
+        gradient.addColorStop(0, p.color);
+        gradient.addColorStop(0.4, p.color + 'bb');
+        gradient.addColorStop(1, 'rgba(255,255,255,0)');
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.glow, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawFlashes() {
+      for (let i = flashes.length - 1; i >= 0; i--) {
+        const f = flashes[i];
+        f.life -= 0.07;
+        f.r += 1.5;
+
+        const grad = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 3);
+        grad.addColorStop(0, 'rgba(255,255,255,1)');
+        grad.addColorStop(0.2, f.color + 'ee');
+        grad.addColorStop(0.7, f.color + '44');
+        grad.addColorStop(1, 'rgba(255,255,255,0)');
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r * 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (f.life <= 0) {
+          flashes.splice(i, 1);
+        }
+      }
+    }
+
+    function animate() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      updateParticles();
+      drawParticles();
+      drawFlashes();
+
+      requestAnimationFrame(animate);
+    }
+
+    resizeCanvas();
+    initParticles();
+    window.addEventListener('resize', resizeCanvas);
+    animate();
+  </script>
+</body>
+</html>
