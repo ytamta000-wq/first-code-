@@ -39,12 +39,12 @@
       width: 100%;
       height: 100%;
       display: block;
-      background: radial-gradient(circle at center, #0a0a0a 0%, #050505 30%, #000 100%);
+      background: #000000;
       z-index: 0;
     }
 
     body.light canvas {
-      background: radial-gradient(circle at center, #f5f5f5 0%, #e6e6e6 30%, #f0f0f0 100%);
+      background: #f4f4f4;
     }
 
     .content {
@@ -139,33 +139,30 @@
 
     function createParticle() {
       const angle = Math.random() * Math.PI * 2;
-      const speed = randomBetween(1.2, 4.8);
-      const radius = randomBetween(0.4, 1.2);
+      const speed = randomBetween(2, 8);
       return {
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
-        radius,
-        color: ['#ff00ff', '#00eaff', '#00ff99', '#ffd000', '#ff7a18', '#ff4d9d', '#7f5cff'][Math.floor(Math.random() * 7)],
-        glow: randomBetween(8, 18),
+        radius: 0.004,
+        opacity: randomBetween(0.3, 1),
       };
     }
 
     function initParticles() {
-      const count = 260;
+      const count = 8000;
       particles = [];
       for (let i = 0; i < count; i++) {
         particles.push(createParticle());
       }
     }
 
-    function addFlash(x, y, color) {
+    function addFlash(x, y) {
       flashes.push({
         x,
         y,
-        color,
-        r: 2,
+        r: 0.05,
         life: 1,
         maxLife: 1,
       });
@@ -191,22 +188,21 @@
           const dx = q.x - p.x;
           const dy = q.y - p.y;
           const dist = Math.hypot(dx, dy);
-          const minDist = p.radius + q.radius + 3;
+          const minDist = 0.15;
 
           if (dist < minDist) {
             const midX = (p.x + q.x) / 2;
             const midY = (p.y + q.y) / 2;
-            const color = Math.random() > 0.5 ? p.color : q.color;
-            addFlash(midX, midY, color);
+            addFlash(midX, midY);
 
-            p.x = randomBetween(0, canvas.width);
-            p.y = randomBetween(0, canvas.height);
-            q.x = randomBetween(0, canvas.width);
-            q.y = randomBetween(0, canvas.height);
-            p.vx = randomBetween(-4.5, 4.5);
-            p.vy = randomBetween(-4.5, 4.5);
-            q.vx = randomBetween(-4.5, 4.5);
-            q.vy = randomBetween(-4.5, 4.5);
+            p.x = Math.random() * canvas.width;
+            p.y = Math.random() * canvas.height;
+            q.x = Math.random() * canvas.width;
+            q.y = Math.random() * canvas.height;
+            p.vx = randomBetween(-8, 8);
+            p.vy = randomBetween(-8, 8);
+            q.vx = randomBetween(-8, 8);
+            q.vy = randomBetween(-8, 8);
             break;
           }
         }
@@ -215,17 +211,7 @@
 
     function drawParticles() {
       for (const p of particles) {
-        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.glow);
-        gradient.addColorStop(0, p.color);
-        gradient.addColorStop(0.4, p.color + 'bb');
-        gradient.addColorStop(1, 'rgba(255,255,255,0)');
-
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.glow, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = p.color;
+        ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity * 0.8})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();
@@ -235,18 +221,12 @@
     function drawFlashes() {
       for (let i = flashes.length - 1; i >= 0; i--) {
         const f = flashes[i];
-        f.life -= 0.07;
-        f.r += 1.5;
+        f.life -= 0.08;
+        f.r += 0.08;
 
-        const grad = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 3);
-        grad.addColorStop(0, 'rgba(255,255,255,1)');
-        grad.addColorStop(0.2, f.color + 'ee');
-        grad.addColorStop(0.7, f.color + '44');
-        grad.addColorStop(1, 'rgba(255,255,255,0)');
-
-        ctx.fillStyle = grad;
+        ctx.fillStyle = `rgba(255, 255, 255, ${f.life * 0.6})`;
         ctx.beginPath();
-        ctx.arc(f.x, f.y, f.r * 3, 0, Math.PI * 2);
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
         ctx.fill();
 
         if (f.life <= 0) {
@@ -256,7 +236,7 @@
     }
 
     function animate() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       updateParticles();
